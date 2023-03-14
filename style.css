@@ -1,0 +1,22 @@
+body {
+    background-color: rgb(105, 70, 36);
+    text-align: center;
+}
+
+#inptext {
+    width: 30px;
+    height: 30px;
+}
+
+#addbtn {
+    width: 45px;
+    height: 30px;
+}
+
+#trash {
+    text-align: center;
+}
+
+#res {
+    text-align: center;
+}
