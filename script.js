@@ -2,15 +2,15 @@ const words = ['a', 'b', 'c'];
 const tries = [];
 const successfulTries = [];
 const failedTries = [];
+const button = document.getElementById('addbtn');
 const input = document.getElementById('inptext');
 const result = document.getElementById('res');
 const trash = document.getElementById('pa');
-const lives = document.getElementById('mylives');
-
+const livesCount = document.getElementById('mylives');
 const INDEX_OF_INVALID_VALUE = -1
 
 function isLetter(char) {
-    return (char >= 'A' && char <= 'Z') || (char >= 'a' && char <= 'z');
+    return (char >= 'A' && char <= 'Z') || (char >= 'a' && char <= 'z' || char == 'ç');
 }
 
 function checkIfInside(arr, letter) {
@@ -63,28 +63,67 @@ function add() {
     const answer = input.value
     trash.append(answer)
     cleanField();
+    lost();
+    won();
 }
- 
+
 function cleanField() {
     input.value = ""
 }
 
-function win() {
+
+function won() {
     if (successfulTries.length == words.length) {
         const winner = document.getElementById('notif');
         winner.innerHTML = "WINNER"
         document.body.append(winner);
         document.body.style.background = "#13D513";
+        button.remove();
+        input.remove();
+        trash.remove();
+        livesCount.remove();
+        result.remove();
+        document.body.append(playAgainBtn);
         return
     }
 }
 
-function fail() {
+function lost() {
+    let lives = document.getElementById('lives');
+    if (failedTries.length == 1) {
+        lives.innerHTML = 4
+    }
+    if (failedTries.length == 2) {
+        lives.innerHTML = 3
+    }
+    if (failedTries.length == 3) {
+        lives.innerHTML = 2
+    }
+    if (failedTries.length == 4) {
+        lives.innerHTML = 1
+    }
+    if (failedTries.length == 5) {
+        lives.innerHTML = 0
+    }
     if (failedTries.length > 5) {
         const error = document.getElementById('notif2');
         error.innerHTML = "LOOSER"
         document.body.append(error);
         document.body.style.background = "#B60606";
+        button.remove();
+        input.remove();
+        trash.remove();
+        livesCount.remove();
+        result.remove();
+        document.body.append(playAgainBtn);
         return
     }
 }
+const playAgainBtn = document.createElement('button');
+playAgainBtn.innerHTML = "Play Again"
+playAgainBtn.style.backgroundColor= "grey";
+playAgainBtn.style.width = "50px";
+
+playAgainBtn.addEventListener('click', function(){
+    window.location.reload()
+})
