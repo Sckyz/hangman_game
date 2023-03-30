@@ -11,17 +11,17 @@
 
 <body>
     <div id="input">
-        <h1>Jogo da Forca!</h1>
-        <input type="text" id="inptext" maxlength="1" minlength="1">
+        <h1>Hangman Game</h1>
+        <h2>You have 6 chances</h2>
+        <input type="text" id="inptext" maxlength="1" minlength="1" autocomplete="off">
         <input type="button" id="addbtn" value="TRY" onclick="add()">
     </div><br><br><br>
     <div id="res">
-        <p id="lists"></p>
     </div>
     <hr />
     <div id="trash">
-        <p id="mylives">Vidas:<span id="lives">5</span><br></p>
-        <p id="pa">Tentativas:<br></p>
+        <p id="mylives"></p>
+        <p id="pa">You've already tried:<br></p>
         <br>
     </div>
     <div id="notif">

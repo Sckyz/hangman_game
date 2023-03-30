@@ -1,17 +1,17 @@
-const words = ['a', 'b', 'c'];
+const words = 'honey';
 const tries = [];
 const successfulTries = [];
 const failedTries = [];
-const button = document.getElementById('addbtn');
-const input = document.getElementById('inptext');
-const result = document.getElementById('res');
-const trash = document.getElementById('pa');
-const livesCount = document.getElementById('mylives');
+const toCleanStuffs = {
+    button: document.getElementById('addbtn'),
+    input: document.getElementById('inptext'),
+    result: document.getElementById('res'),
+    trash: document.getElementById('pa'),
+    livesCount: document.getElementById('mylives')
+}
 const INDEX_OF_INVALID_VALUE = -1
 
-function isLetter(char) {
-    return (char >= 'A' && char <= 'Z') || (char >= 'a' && char <= 'z' || char == 'ç');
-}
+const reg = /^[ça-z]*$/;
 
 function checkIfInside(arr, letter) {
     return arr.indexOf(letter) != INDEX_OF_INVALID_VALUE
@@ -33,97 +33,107 @@ function inWords(char) {
     return checkIfInside(words, char)
 }
 
-function isEqual(letter, _index, list) {
-    return letter === document.getElementById('inptext').value;
+function isEqual(letter) {
+    return letter === toCleanStuffs.input.value;
 }
 
+function createSpan() {
+    const letters = words.split("")
+    letters.forEach(letter => {
+        let span = document.createElement('span')
+        span.textContent = letter
+        toCleanStuffs.result.append(span)
+        span.setAttribute("id", letter)
+        span.setAttribute("style", "visibility: hidden")
+        // console.log(toCleanStuffs.input)
+        // showLetters(letter)
+    });
+}
 
+// function showLetters() {
+//     if (toCleanStuffs.input.value == letters[0] && letters[0].style.visibility == "hidden") {
+//         letter.setAttribute("style", "visibility: visible")
+//         console.log(letter);
+//     }
+// }
+createSpan();
 function add() {
-    if (!isLetter(input.value) || (input.value.trim() === "")) {
-        alert('Valor inválido, por favor, insira uma LETRA!');
+    if (!reg.test(toCleanStuffs.input.value) || (toCleanStuffs.input.value.trim() === "")) {
+        alert('Invalid value, please try adding a letter');
         cleanField();
         return
     }
-    if (inTries(input.value)) {
-        window.alert('Letra repetida, tente outra!')
+    if (inTries(toCleanStuffs.input.value)) {
+        window.alert('This letter was already tested, please try another one')
         cleanField();
         return
     }
-    tries.push(input.value)
-    if (words.includes(input.value)) {
-        successfulTries.push(input.value)
-        const answer = input.value
-        if (words.find(isEqual)) {
-            let correct = result.append(answer);
-            cleanField();
-            return
-        }
+    if (toCleanStuffs.input.value == "h") {
+        const some = document.getElementById("h")
+        console.log(some);
+        some.style.visibility = "visible";
     }
-    failedTries.push(input.value)
-    const answer = input.value
-    trash.append(answer)
+    tries.push(toCleanStuffs.input.value)
+    const answer = toCleanStuffs.input.value
     cleanField();
-    lost();
-    won();
+    if (inWords(answer)) {
+        successfulTries.push(answer)
+        // toCleanStuffs.result.append(answer)
+        isAlive();
+        return
+    }
+    lives--
+    failedTries.push(answer)
+    toCleanStuffs.trash.append(answer)
+    isAlive();
 }
 
 function cleanField() {
-    input.value = ""
+    toCleanStuffs.input.value = ""
 }
 
+let lives = 6;
+function isAlive() {
+    toCleanStuffs.livesCount.innerHTML = "Chances left:  " + lives;
+    if (failedTries.length > 5) {
+        lost();
+    }
+    if (successfulTries.length === words.length) {
+        return won();
+    }
+}
 
 function won() {
-    if (successfulTries.length == words.length) {
-        const winner = document.getElementById('notif');
-        winner.innerHTML = "WINNER"
-        document.body.append(winner);
-        document.body.style.background = "#13D513";
-        button.remove();
-        input.remove();
-        trash.remove();
-        livesCount.remove();
-        result.remove();
-        document.body.append(playAgainBtn);
-        return
-    }
+    const winner = document.getElementById('notif');
+    winner.innerHTML = "WINNER"
+    document.body.append(winner);
+    changeBackgroundColor("#13D513");
+    return cleanAlltrashes()
+}
+
+function cleanAlltrashes() {
+    const keys = Object.keys(toCleanStuffs)
+
+    keys.forEach((key) => {
+        toCleanStuffs[key].remove()
+    })
+
+    document.body.append(playAgainBtn);
+}
+function changeBackgroundColor(color) {
+    document.body.style.background = color
 }
 
 function lost() {
-    let lives = document.getElementById('lives');
-    if (failedTries.length == 1) {
-        lives.innerHTML = 4
-    }
-    if (failedTries.length == 2) {
-        lives.innerHTML = 3
-    }
-    if (failedTries.length == 3) {
-        lives.innerHTML = 2
-    }
-    if (failedTries.length == 4) {
-        lives.innerHTML = 1
-    }
-    if (failedTries.length == 5) {
-        lives.innerHTML = 0
-    }
-    if (failedTries.length > 5) {
-        const error = document.getElementById('notif2');
-        error.innerHTML = "LOOSER"
-        document.body.append(error);
-        document.body.style.background = "#B60606";
-        button.remove();
-        input.remove();
-        trash.remove();
-        livesCount.remove();
-        result.remove();
-        document.body.append(playAgainBtn);
-        return
-    }
+    const error = document.getElementById('notif2');
+    error.innerHTML = "LOOSER"
+    document.body.append(error);
+    changeBackgroundColor("#B60606");
+    return cleanAlltrashes()
 }
 const playAgainBtn = document.createElement('button');
 playAgainBtn.innerHTML = "Play Again"
-playAgainBtn.style.backgroundColor= "grey";
 playAgainBtn.style.width = "50px";
-
-playAgainBtn.addEventListener('click', function(){
+playAgainBtn.addEventListener('click', function () {
     window.location.reload()
 })
