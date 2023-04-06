@@ -12,7 +12,10 @@
 <body>
     <div id="input">
         <h1>Hangman Game</h1>
-        <h2>You have 6 chances</h2>
+        <h2>Add a word: <input type="text" id="wordInp" autocomplete="off"><input type="button" id="addword" value="ADD"
+                onclick="addToArray()"></h2>
+        <h3>Now, have a friend try to guess it:</h3>
+        <h3>You have 6 chances</h3>
         <input type="text" id="inptext" maxlength="1" minlength="1" autocomplete="off">
         <input type="button" id="addbtn" value="TRY" onclick="add()">
     </div><br><br><br>
